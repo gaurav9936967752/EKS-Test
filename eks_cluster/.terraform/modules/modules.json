@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"vpc","Source":"./modules/vpc","Dir":"modules/vpc"},{"Key":"","Source":"","Dir":"."},{"Key":"eks_cluster","Source":"./modules/eks","Dir":"modules/eks"},{"Key":"backend","Source":"../backend","Dir":""},{"Key":"eks","Source":"./modules/eks","Dir":"modules/eks"}]}

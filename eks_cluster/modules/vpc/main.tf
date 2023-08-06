@@ -1,25 +1,40 @@
-resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
+# Define the VPC resource
+resource "aws_vpc" "this" {
+  cidr_block = var.vpc_cidr_block
 
   tags = {
-    Name = "MyVPC"
+    Name = "my-vpc"
   }
 }
 
+# Define public subnets
+resource "aws_subnet" "public" {
+  count = length(var.vpc_subnets["public_subnets"])
+  cidr_block = var.vpc_subnets["public_subnets"][count.index]
+  vpc_id     = aws_vpc.this.id
+
+  tags = {
+    Name = "public-subnet-${count.index + 1}"
+  }
+}
+
+# Define private subnets
 resource "aws_subnet" "private" {
-  count = 2
-  cidr_block = "10.0.${count.index + 1}.0/24"
-  vpc_id     = aws_vpc.main.id
+  count = length(var.vpc_subnets["private_subnets"])
+  cidr_block = var.vpc_subnets["private_subnets"][count.index]
+  vpc_id     = aws_vpc.this.id
 
   tags = {
-    Name = "PrivateSubnet-${count.index + 1}"
+    Name = "private-subnet-${count.index + 1}"
   }
 }
 
-output "vpc_id" {
-  value = aws_vpc.main.id
+# Output the public and private subnet IDs
+output "public_subnets" {
+  value = aws_subnet.public[*].id
 }
 
-output "private_subnets_ids" {
+output "private_subnets" {
   value = aws_subnet.private[*].id
 }
+
